@@ -68,6 +68,25 @@ A baseline security header set (CSP, `X-Frame-Options: DENY`, `Referrer-Policy`,
 
 The `/events` page renders server-supplied JSON payloads. Each payload is serialised through `safeStringify` (`src/lib/format.ts`) with a hard cap (`EVENT_PAYLOAD_MAX_CHARS`, default 5,000 chars) and a visible `…(truncated)` marker. Circular references, `BigInt`, functions, and malformed timestamps are replaced with safe sentinels so a bad payload can't crash the page.
 
+## Document titles
+
+The root layout keeps the home route on the default `AgentPay` title and applies the template `"%s — AgentPay"` to route-specific titles.
+
+- `Services`
+- `New service`
+- `Usage metering`
+- `Agents`
+- `Admin`
+- `Stats`
+- `Event log`
+- `Webhooks`
+- `API keys`
+- `Search`
+- `Service {serviceId}`
+- `Edit service {serviceId}`
+- `Top agents {serviceId}`
+- `Agent {agent}`
+
 ## Services list paging
 
 The `/services` page now uses server-driven pagination with the shared `Spinner`, `EmptyState`, and `Pagination` components.
