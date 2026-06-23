@@ -1,21 +1,13 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { hydrateRoot, type Root } from "react-dom/client";
-import { MessageChannel as NodeMessageChannel } from "worker_threads";
 
 import { useLocalState } from "../useLocalState";
 
-const originalMessageChannel = global.MessageChannel;
-
 function renderToString(element: ReactElement) {
-  if (typeof global.MessageChannel === "undefined") {
-    global.MessageChannel =
-      NodeMessageChannel as unknown as typeof global.MessageChannel;
-  }
-
   return (
-    // Load react-dom/server after the MessageChannel fallback is available.
-    jest.requireActual<typeof import("react-dom/server")>("react-dom/server")
+    // Use the Node server renderer in Jest's jsdom environment.
+    jest.requireActual<typeof import("react-dom/server")>("react-dom/server.node")
       .renderToString
   )(element);
 }
@@ -51,10 +43,6 @@ describe("useLocalState", () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
-  });
-
-  afterAll(() => {
-    global.MessageChannel = originalMessageChannel;
   });
 
   it("renders the fallback on the server and hydrates from localStorage after mount", async () => {
